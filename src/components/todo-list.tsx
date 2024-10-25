@@ -3,21 +3,25 @@
 import {useState} from "react";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
+import {useTodos, useTodosStore} from "@/stores/useTodosStore";
 
 export const TodoList = () => {
-    const [todos, setTodos] = useState<string[]>([
-        "Learn React",
-        "Learn Next.js",
-        "Learn Zustand",
-    ]);
+    const store = useTodosStore()
+    const [todos, setTodos] = useTodos(state => state.todos);
     const [input, setInput] = useState("");
 
     const handleAdd = () => {
-        setTodos((prev) => [...prev, input]);
+        // Update the store using the set function
+        setTodos((state) => ({
+            todos: [...state.todos, input]
+        }));
     }
 
     const handleDelete = (index: number) => {
-        setTodos((prev) => prev.filter((_, i) => i !== index));
+        // Or use the store functions directly
+        store.setState(state => ({
+            todos: state.todos.filter((_, i) => i !== index)
+        }));
     };
 
     return (
